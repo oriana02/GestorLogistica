@@ -19,7 +19,4 @@ public class Pedido {
     private Date fechaEntrega;
     private String estadoPedido; //en preparacion, en transito, pedido entregado
 
-
-
-    
 }
