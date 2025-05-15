@@ -35,7 +35,7 @@ public class PedidoController {
     
     //lista de pedidos
     @GetMapping("/pedidos")
-    public List<Pedido> listarPedidos(){
+    public List<PedidoEntity> listarPedidos(){
         return pedidoService.listarPedidos();
     }
 

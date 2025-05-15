@@ -18,7 +18,6 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Integer> {
     PedidoEntity findById(int idPedido);
     Boolean existsById(int idPedido);
     void deleteById(int idPedido);
-    PedidoEntity existById(int idPedido);
     PedidoEntity save(Pedido pedido);
 
 }

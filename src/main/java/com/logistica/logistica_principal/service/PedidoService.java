@@ -21,14 +21,14 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidorepository;
 
-    private final List<Pedido> pedidos = new ArrayList<>();
+    private final List<PedidoEntity> pedidos = new ArrayList<>();
 
     public PedidoService(){
-        pedidos.add(new Pedido(1, "viña", new Date(2025,4,12), new Date(2025,4,13), new Date(2025,4,23), "en preparacion"));
+        pedidos.add(new PedidoEntity(1, "viña", new Date(2023, 3,23), new Date(2025,3,24), "en preparacion"));
     }
     
 
-   public List<Pedido> listarPedidos(){
+   public List<PedidoEntity> listarPedidos(){
         return pedidos;
     }
 
