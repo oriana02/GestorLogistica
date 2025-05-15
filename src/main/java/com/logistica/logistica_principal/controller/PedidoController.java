@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.logistica.logistica_principal.models.Pedido;
+import com.logistica.logistica_principal.models.dto.PedidoDto;
 import com.logistica.logistica_principal.models.entity.PedidoEntity;
 import com.logistica.logistica_principal.service.PedidoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,17 +35,21 @@ public class PedidoController {
     
     //lista de pedidos
     @GetMapping("/pedidos")
-    public List<PedidoEntity> listarPedidos(){
+    public List<Pedido> listarPedidos(){
         return pedidoService.listarPedidos();
     }
 
     //busca pedido por id
-    @GetMapping("/pedidos/{id}")
-    public ResponseEntity<PedidoEntity> obtenerPedidoPorId(@PathVariable Integer id){
-        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(id);
-        return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/pedidos/{idPedido}")
+    public ResponseEntity<Optional<PedidoEntity>> obtenerPedidoPorId(@PathVariable Integer idPedido){
+        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);
+        if (pedido != null) {
+            return ResponseEntity.ok(pedido);            
+        }
+        return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Este endpoint permite agregar pedido")
     //crea nuevo pedido
     @PostMapping("/pedidos")
     public ResponseEntity<PedidoEntity> crearPedido(@RequestBody PedidoEntity pedido){
@@ -49,11 +58,11 @@ public class PedidoController {
     }
 
     //actualiza pedido
-    @PutMapping("/pedidos/{id}")
-    public ResponseEntity<Optional<PedidoEntity>> actualizarPedido(@PathVariable Integer id, @RequestBody PedidoEntity pedido) {
-        Optional<PedidoEntity> pedidoExistente = pedidoService.buscarPorId(id);
+    @PutMapping("/pedidos/{idPedido}")
+    public ResponseEntity<Optional<PedidoEntity>> actualizarPedido(@PathVariable Integer idPedido, @RequestBody PedidoEntity pedido) {
+        Optional<PedidoEntity> pedidoExistente = pedidoService.buscarPorId(idPedido);
         if (pedidoExistente.isPresent()) {
-            Optional<PedidoEntity> pedidoActualizado = pedidoService.actualizaPedido(id, pedido);
+            Optional<PedidoEntity> pedidoActualizado = pedidoService.actualizaPedido(idPedido, pedido);
             return ResponseEntity.ok(pedidoActualizado);
         } else {
             return ResponseEntity.notFound().build();
@@ -61,17 +70,37 @@ public class PedidoController {
     }
 
     //elimina pedido
-    @DeleteMapping("/pedidos/{id}")
-    public ResponseEntity<Void> eliminarPedido(@PathVariable Integer id){
-        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(id);
+    @DeleteMapping("/pedidos/{idPedido}")
+    public ResponseEntity<Void> eliminarPedido(@PathVariable Integer idPedido){
+        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);
         if (pedido.isPresent()) {
-            pedidoService.eliminarPedido(id);
+            pedidoService.eliminarPedido(idPedido);
             return ResponseEntity.noContent().build();
         } else{
             return ResponseEntity.notFound().build();
         }
         
     }
+
+      @GetMapping("/pedidosdtocomuna/{comunaPedido}")
+      public ResponseEntity<PedidoEntity> buscarPorComuna(@PathVariable String comunaPedido){
+        PedidoEntity pedidoDto = pedidoService.buscarPorComuna(comunaPedido);
+        if (pedidoDto != null) {
+            return ResponseEntity.ok(pedidoDto);
+            
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/pedidodtoestado/{estadoPedido}")
+    public ResponseEntity<PedidoEntity> buscarPorEstado(@PathVariable String estadoPedido){
+        PedidoEntity pedidoDto = pedidoService.buscarPorEstado(estadoPedido);
+        if (pedidoDto != null) {
+            return ResponseEntity.ok(pedidoDto);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 
 
 }

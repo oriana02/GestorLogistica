@@ -13,8 +13,8 @@ import com.logistica.logistica_principal.models.entity.PedidoEntity;
 @Repository
 public interface PedidoRepository extends JpaRepository<PedidoEntity, Integer> {
 
-    PedidoEntity findByComuna(String comunaPedido);
-    PedidoEntity findByEstado(String estadoPedido);
+    PedidoEntity findByComunaPedido(String comunaPedido);
+    PedidoEntity findByEstadoPedido(String estadoPedido);
     PedidoEntity findById(int idPedido);
     Boolean existsById(int idPedido);
     void deleteById(int idPedido);
