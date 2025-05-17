@@ -1,17 +1,10 @@
 package com.logistica.logistica_principal.service;
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.logistica.logistica_principal.models.Pedido;
-import com.logistica.logistica_principal.models.dto.PedidoDto;
 import com.logistica.logistica_principal.models.entity.PedidoEntity;
 import com.logistica.logistica_principal.repository.PedidoRepository;
 
@@ -19,17 +12,10 @@ import com.logistica.logistica_principal.repository.PedidoRepository;
 @Service
 public class PedidoService {
     @Autowired
-    private PedidoRepository pedidorepository;
-
-    private final List<PedidoEntity> pedidos = new ArrayList<>();
-
-    public PedidoService(){
-        pedidos.add(new PedidoEntity(1, "viña", new Date(2023, 3,23), new Date(2025,3,24), "en preparacion"));
-    }
-    
+    private PedidoRepository pedidorepository;    
 
    public List<PedidoEntity> listarPedidos(){
-        return pedidos;
+        return pedidorepository.findAll();
     }
 
     
@@ -38,11 +24,11 @@ public class PedidoService {
         return pedidorepository.findById(idPedido);
     }
 
-    public PedidoEntity buscarPorEstado(String estadoPedido){
+    public List<PedidoEntity> buscarPorEstado(String estadoPedido){
         return pedidorepository.findByEstadoPedido(estadoPedido);
     }
 
-    public PedidoEntity buscarPorComuna(String comunaPedido){
+    public List<PedidoEntity> buscarPorComuna(String comunaPedido){
         return pedidorepository.findByComunaPedido(comunaPedido);
     }
     
@@ -57,15 +43,15 @@ public class PedidoService {
     }
 
     //actualiza un pedido existente
-    public Optional<PedidoEntity> actualizaPedido(Integer idPedido,PedidoEntity pedidoActualizado){
+    public Optional<PedidoEntity> actualizaPedido(PedidoEntity pedidoActualizado){
+        Integer idPedido = pedidoActualizado.getIdPedido();
+        
         return pedidorepository.findById(idPedido).map(pedido -> {
             pedido.setComunaPedido(pedidoActualizado.getComunaPedido());
             pedido.setFechaCompra(pedidoActualizado.getFechaCompra());
             pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
-            return
-             pedidorepository.save(pedido);
+            return pedidorepository.save(pedido);
         });
-
     }
 
 }
