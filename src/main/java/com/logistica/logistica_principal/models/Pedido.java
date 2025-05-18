@@ -17,6 +17,6 @@ public class Pedido {
     private Date fehaCompra;
     private Date fechaLimite;
     private Date fechaEntrega;
-    private String estadoPedido; //en preparacion, en transito, pedido entregado
+    private String estadoPedido; // entregado, en camino, pendiente
 
 }

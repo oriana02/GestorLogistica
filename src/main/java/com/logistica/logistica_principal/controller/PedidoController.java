@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logistica.logistica_principal.models.entity.PedidoEntity;
+import com.logistica.logistica_principal.repository.PedidoRepository;
 import com.logistica.logistica_principal.service.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,21 +26,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api")
 public class PedidoController {
 
+    private final PedidoRepository pedidoRepository;
+
     @Autowired
     private PedidoService pedidoService;
 
-    @GetMapping("/hola")
-    public String holaMundo(){
-        return "Esto es una prueba desde Spring";
+    PedidoController(PedidoRepository pedidoRepository) {
+        this.pedidoRepository = pedidoRepository;
     }
     
+    @Operation(summary = "Entrega una lista de los pedidos")
     //lista de pedidos
     @GetMapping("/pedidos")
     public List<PedidoEntity> listarPedidos(){
         return pedidoService.listarPedidos();
     }
 
-    //busca pedido por id   si funciona
+    @Operation(summary = "Busca un pedido por su id")
     @GetMapping("/pedidos/{idPedido}")
     public ResponseEntity<Optional<PedidoEntity>> obtenerPedidoPorId(@PathVariable Integer idPedido){
         Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);
@@ -50,14 +53,17 @@ public class PedidoController {
     }
 
     @Operation(summary = "Este endpoint permite agregar pedido")
-    //crea nuevo pedido
     @PostMapping("/pedidosNuevo")
-    public ResponseEntity<PedidoEntity> crearPedido(@RequestBody PedidoEntity pedido){
-        PedidoEntity nuevoPedido = pedidoService.agregarPedido(pedido);
+    public ResponseEntity<PedidoEntity> agregarPedido(@RequestBody PedidoEntity nuevoPedido){
+        nuevoPedido.setIdPedido(null);
+        PedidoEntity savedPedido = pedidoService.agregarPedido(nuevoPedido);
         return ResponseEntity.ok(nuevoPedido);
+        
+        //PedidoEntity nuevoPedido = pedidoService.agregarPedido(pedido);
+        //return ResponseEntity.ok(nuevoPedido);
     }
 
-    //actualiza pedido
+    @Operation(summary = "Permite actualizar el pedido")
     @PutMapping("/pedidosActualizar")
     public ResponseEntity<Optional<PedidoEntity>> actualizarPedido(@RequestBody PedidoEntity pedido) {
         Optional<PedidoEntity> pedidoExiste = pedidoService.actualizaPedido(pedido);
@@ -68,7 +74,7 @@ public class PedidoController {
         }
     }
 
-    //elimina pedido
+    @Operation(summary = "Elimina un pedido por id")
     @DeleteMapping("/pedidosEliminado/{idPedido}")
     public ResponseEntity<Optional<PedidoEntity>> eliminarPedido(@PathVariable Integer idPedido){
         Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);
@@ -78,11 +84,11 @@ public class PedidoController {
         } else{
             return ResponseEntity.notFound().build();
         }
-        
     }
 
-      @GetMapping("/pedidosdtoComuna/{comunaPedido}")
-      public ResponseEntity<List<PedidoEntity>> buscarPorComuna(@PathVariable String comunaPedido){
+    @Operation(summary = "Busca pedido por comuna")
+    @GetMapping("/pedidosdtoComuna/{comunaPedido}")
+    public ResponseEntity<List<PedidoEntity>> buscarPorComuna(@PathVariable String comunaPedido){
         List<PedidoEntity> pedidoDto = pedidoService.buscarPorComuna(comunaPedido);
         if (pedidoDto != null) {
             return ResponseEntity.ok(pedidoDto);
@@ -91,6 +97,7 @@ public class PedidoController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Busca pedido por estado de pedido")
     @GetMapping("/pedidodtoEstado/{estadoPedido}")
     public ResponseEntity<List<PedidoEntity>> buscarPorEstado(@PathVariable String estadoPedido){
         List<PedidoEntity> pedidoDto = pedidoService.buscarPorEstado(estadoPedido);

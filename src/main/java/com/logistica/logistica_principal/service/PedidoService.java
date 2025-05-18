@@ -45,13 +45,19 @@ public class PedidoService {
     //actualiza un pedido existente
     public Optional<PedidoEntity> actualizaPedido(PedidoEntity pedidoActualizado){
         Integer idPedido = pedidoActualizado.getIdPedido();
-        
-        return pedidorepository.findById(idPedido).map(pedido -> {
+        Optional<PedidoEntity> pedidoExiste = pedidorepository.findById(idPedido);
+
+        if (pedidoExiste.isPresent()) {
+            PedidoEntity pedido = pedidoExiste.get();
             pedido.setComunaPedido(pedidoActualizado.getComunaPedido());
             pedido.setFechaCompra(pedidoActualizado.getFechaCompra());
             pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
-            return pedidorepository.save(pedido);
-        });
+            pedido.setEstadoPedido(pedidoActualizado.getEstadoPedido());
+            PedidoEntity pedidoGuardado = pedidorepository.save(pedido);
+            return Optional.of(pedidoGuardado);
+        }else{
+            return Optional.empty();
+        }
     }
 
 }

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class PedidoEntity {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idPedido;
+    private Integer idPedido;
 
     @Column(name = "comunaPedido")
     private String comunaPedido;
