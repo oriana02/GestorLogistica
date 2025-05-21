@@ -19,11 +19,10 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 
 
 @RestController
-@RequestMapping("/api")
 public class PedidoController {
 
     @Autowired
@@ -40,7 +39,7 @@ public class PedidoController {
     @Operation(summary = "Busca un pedido por su id")
     @GetMapping("/pedidos/{idPedido}")
     public ResponseEntity<Optional<Pedido>> obtenerPedidoPorId(@PathVariable Integer idPedido){
-        Optional<Pedido> pedido = pedidoService.buscarPorId(idPedido);
+        Optional<Pedido> pedido = pedidoService.buscarPorId(idPedido);       
         if (pedido != null) {
             return ResponseEntity.ok(pedido);            
         }
@@ -53,9 +52,6 @@ public class PedidoController {
         nuevoPedido.setIdPedido(0);
         Pedido pedidoGuardado = pedidoService.agregarPedido(nuevoPedido);
         return ResponseEntity.ok(pedidoGuardado);
-        
-        //PedidoEntity nuevoPedido = pedidoService.agregarPedido(pedido);
-        //return ResponseEntity.ok(nuevoPedido);
     }
 
     @Operation(summary = "Permite actualizar el pedido")

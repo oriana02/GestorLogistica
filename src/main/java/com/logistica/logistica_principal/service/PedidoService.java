@@ -24,6 +24,7 @@ public class PedidoService {
         return pedidorepository.findById(idPedido);
     }
 
+    // se cambia pedido a pedidodto
     private PedidoDto convertirDto(Pedido pedido){
         PedidoDto dto = new PedidoDto();
         dto.setIdPedido(pedido.getIdPedido());
@@ -33,31 +34,34 @@ public class PedidoService {
         return dto;
     }
 
-
     public List<PedidoDto> buscarPorEstado(String estadoPedido){
-        List<Pedido> pedidos = pedidorepository.findByEstadoPedido(estadoPedido);
-        List<PedidoDto> pedidoDtos = new ArrayList<>();
-        for (Pedido pedido : pedidos){
-            pedidoDtos.add(convertirDto(pedido));
+        try {
+            List<Pedido> pedidos = pedidorepository.findByEstadoPedido(estadoPedido);
+            List<PedidoDto> pedidoDtos = new ArrayList<>();
+            for (Pedido pedido : pedidos){
+                pedidoDtos.add(convertirDto(pedido));
+            }
+            return pedidoDtos;
+        } catch (Exception e) {
+            return new ArrayList<>();
         }
-        return pedidoDtos;
-
-        //return pedidorepository.findByEstadoPedido(estadoPedido);
     }
+
 
     public List<PedidoDto> buscarPorComuna(String comunaPedido){
-        List<Pedido> pedidos = pedidorepository.findByComunaPedido(comunaPedido);
-        List<PedidoDto> pedidoDtos = new ArrayList<>();
-        for (Pedido pedido : pedidos) {
-            pedidoDtos.add(convertirDto(pedido)); 
-        }
-        return pedidoDtos;
-        //return pedidorepository.findByComunaPedido(comunaPedido);
+        try {
+            List<Pedido> pedidos = pedidorepository.findByComunaPedido(comunaPedido);
+            List<PedidoDto> pedidoDtos = new ArrayList<>();
+            for (Pedido pedido : pedidos) {
+                pedidoDtos.add(convertirDto(pedido)); 
+            }
+            return pedidoDtos;
+        } catch (Exception e) {
+            return new ArrayList<>();  //si da error, devuelve una lista vacia
+        } 
     }
-
-
     
-    //crea nuevo pedido
+
     public Pedido agregarPedido(Pedido pedido){
         return pedidorepository.save(pedido);
     }
@@ -69,18 +73,23 @@ public class PedidoService {
 
     //actualiza un pedido existente
     public Optional<Pedido> actualizaPedido(Pedido pedidoActualizado){
-        Integer idPedido = pedidoActualizado.getIdPedido();
-        Optional<Pedido> pedidoExiste = pedidorepository.findById(idPedido);
-
-        if (pedidoExiste.isPresent()) {
-            Pedido pedido = pedidoExiste.get();
-            pedido.setComunaPedido(pedidoActualizado.getComunaPedido());
-            pedido.setFechaCompra(pedidoActualizado.getFechaCompra());
-            pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
-            pedido.setEstadoPedido(pedidoActualizado.getEstadoPedido());
-            Pedido pedidoGuardado = pedidorepository.save(pedido);
-            return Optional.of(pedidoGuardado);
-        }else{
+        try {
+            Integer idPedido = pedidoActualizado.getIdPedido();
+            Optional<Pedido> pedidoExiste = pedidorepository.findById(idPedido);
+            
+            if (pedidoExiste.isPresent()) {
+                Pedido pedido = pedidoExiste.get();
+                pedido.setComunaPedido(pedidoActualizado.getComunaPedido());
+                pedido.setFechaCompra(pedidoActualizado.getFechaCompra());
+                pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
+                pedido.setEstadoPedido(pedidoActualizado.getEstadoPedido());
+                Pedido pedidoGuardado = pedidorepository.save(pedido);
+                return Optional.of(pedidoGuardado);
+            }else{
+                return Optional.empty();
+            }
+            
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
