@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.logistica.logistica_principal.models.Pedido;
 import com.logistica.logistica_principal.models.dto.PedidoDto;
+import com.logistica.logistica_principal.models.entity.PedidoEntity;
 import com.logistica.logistica_principal.repository.PedidoRepository;
 
 @Transactional
@@ -16,29 +16,29 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidorepository;    
 
-   public List<Pedido> listarPedidos(){
+   public List<PedidoEntity> listarPedidos(){
         return pedidorepository.findAll();
     }
 
-    public Optional<Pedido> buscarPorId(Integer idPedido){
+    public Optional<PedidoEntity> buscarPorId(Integer idPedido){
         return pedidorepository.findById(idPedido);
     }
 
     // se cambia pedido a pedidodto
-    private PedidoDto convertirDto(Pedido pedido){
+    private PedidoDto convertirDto(PedidoEntity entity){
         PedidoDto dto = new PedidoDto();
-        dto.setIdPedido(pedido.getIdPedido());
-        dto.setComunaPedido(pedido.getComunaPedido());
-        dto.setEstadoPedido(pedido.getEstadoPedido());
-        dto.setFechaEntrega(pedido.getFechaEntrega());
+        dto.setIdPedido(entity.getIdPedido());
+        dto.setComunaPedido(entity.getComunaPedido());
+        dto.setEstadoPedido(entity.getEstadoPedido());
+        dto.setFechaEntrega(entity.getFechaEntrega());
         return dto;
     }
 
     public List<PedidoDto> buscarPorEstado(String estadoPedido){
         try {
-            List<Pedido> pedidos = pedidorepository.findByEstadoPedido(estadoPedido);
+            List<PedidoEntity> pedidos = pedidorepository.findByEstadoPedido(estadoPedido);
             List<PedidoDto> pedidoDtos = new ArrayList<>();
-            for (Pedido pedido : pedidos){
+            for (PedidoEntity pedido : pedidos){
                 pedidoDtos.add(convertirDto(pedido));
             }
             return pedidoDtos;
@@ -50,9 +50,9 @@ public class PedidoService {
 
     public List<PedidoDto> buscarPorComuna(String comunaPedido){
         try {
-            List<Pedido> pedidos = pedidorepository.findByComunaPedido(comunaPedido);
+            List<PedidoEntity> pedidos = pedidorepository.findByComunaPedido(comunaPedido);
             List<PedidoDto> pedidoDtos = new ArrayList<>();
-            for (Pedido pedido : pedidos) {
+            for (PedidoEntity pedido : pedidos) {
                 pedidoDtos.add(convertirDto(pedido)); 
             }
             return pedidoDtos;
@@ -62,7 +62,7 @@ public class PedidoService {
     }
     
 
-    public Pedido agregarPedido(Pedido pedido){
+    public PedidoEntity agregarPedido(PedidoEntity pedido){
         return pedidorepository.save(pedido);
     }
 
@@ -72,18 +72,18 @@ public class PedidoService {
     }
 
     //actualiza un pedido existente
-    public Optional<Pedido> actualizaPedido(Pedido pedidoActualizado){
+    public Optional<PedidoEntity> actualizaPedido(PedidoEntity pedidoActualizado){
         try {
             Integer idPedido = pedidoActualizado.getIdPedido();
-            Optional<Pedido> pedidoExiste = pedidorepository.findById(idPedido);
+            Optional<PedidoEntity> pedidoExiste = pedidorepository.findById(idPedido);
             
             if (pedidoExiste.isPresent()) {
-                Pedido pedido = pedidoExiste.get();
+                PedidoEntity pedido = pedidoExiste.get();
                 pedido.setComunaPedido(pedidoActualizado.getComunaPedido());
                 pedido.setFechaCompra(pedidoActualizado.getFechaCompra());
                 pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
                 pedido.setEstadoPedido(pedidoActualizado.getEstadoPedido());
-                Pedido pedidoGuardado = pedidorepository.save(pedido);
+                PedidoEntity pedidoGuardado = pedidorepository.save(pedido);
                 return Optional.of(pedidoGuardado);
             }else{
                 return Optional.empty();

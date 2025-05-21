@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.logistica.logistica_principal.models.Pedido;
 import com.logistica.logistica_principal.models.dto.PedidoDto;
+import com.logistica.logistica_principal.models.entity.PedidoEntity;
 import com.logistica.logistica_principal.service.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,14 +33,14 @@ public class PedidoController {
     @Operation(summary = "Entrega una lista de los pedidos")
 
     @GetMapping("/pedidos")
-    public List<Pedido> listarPedidos(){
+    public List<PedidoEntity> listarPedidos(){
         return pedidoService.listarPedidos();
     }
 
     @Operation(summary = "Busca un pedido por su id")
     @GetMapping("/pedidos/{idPedido}")
-    public ResponseEntity<Optional<Pedido>> obtenerPedidoPorId(@PathVariable Integer idPedido){
-        Optional<Pedido> pedido = pedidoService.buscarPorId(idPedido);       
+    public ResponseEntity<Optional<PedidoEntity>> obtenerPedidoPorId(@PathVariable Integer idPedido){
+        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);       
         if (pedido != null) {
             return ResponseEntity.ok(pedido);            
         }
@@ -48,16 +49,16 @@ public class PedidoController {
 
     @Operation(summary = "Este endpoint permite agregar pedido")
     @PostMapping("/pedidosNuevo")
-    public ResponseEntity<Pedido> agregarPedido(@RequestBody Pedido nuevoPedido){
+    public ResponseEntity<PedidoEntity> agregarPedido(@RequestBody PedidoEntity nuevoPedido){
         nuevoPedido.setIdPedido(0);
-        Pedido pedidoGuardado = pedidoService.agregarPedido(nuevoPedido);
+        PedidoEntity pedidoGuardado = pedidoService.agregarPedido(nuevoPedido);
         return ResponseEntity.ok(pedidoGuardado);
     }
 
     @Operation(summary = "Permite actualizar el pedido")
     @PutMapping("/pedidosActualizar")
-    public ResponseEntity<Optional<Pedido>> actualizarPedido(@RequestBody Pedido pedido) {
-        Optional<Pedido> pedidoExiste = pedidoService.actualizaPedido(pedido);
+    public ResponseEntity<Optional<PedidoEntity>> actualizarPedido(@RequestBody PedidoEntity pedido) {
+        Optional<PedidoEntity> pedidoExiste = pedidoService.actualizaPedido(pedido);
         if (pedidoExiste.isPresent()) {
             return ResponseEntity.ok(pedidoExiste);
         } else {
@@ -67,8 +68,8 @@ public class PedidoController {
 
     @Operation(summary = "Elimina un pedido por id")
     @DeleteMapping("/pedidosEliminado/{idPedido}")
-    public ResponseEntity<Optional<Pedido>> eliminarPedido(@PathVariable Integer idPedido){
-        Optional<Pedido> pedido = pedidoService.buscarPorId(idPedido);
+    public ResponseEntity<Optional<PedidoEntity>> eliminarPedido(@PathVariable Integer idPedido){
+        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);
         if (pedido.isPresent()) {
             pedidoService.eliminarPedido(idPedido);
             return ResponseEntity.ok(pedido);
