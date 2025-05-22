@@ -62,7 +62,12 @@ public class PedidoService {
     
 
     public PedidoEntity agregarPedido(PedidoEntity pedido){
-        return pedidorepository.save(pedido);
+        PedidoEntity pedidonuevo = new PedidoEntity();
+        pedidonuevo.setComunaPedido(pedido.getComunaPedido());
+        pedidonuevo.setFechaCompra(pedido.getFechaCompra());
+        pedidonuevo.setFechaEntrega(pedido.getFechaEntrega());
+        pedidonuevo.setEstadoPedido(pedido.getEstadoPedido());
+        return pedidorepository.save(pedidonuevo);
     }
 
     //elimina pedido por id
