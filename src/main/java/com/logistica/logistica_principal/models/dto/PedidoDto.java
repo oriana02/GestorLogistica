@@ -14,7 +14,4 @@ public class PedidoDto {
     private String comunaPedido;
     private String estadoPedido;
     private LocalDate fechaEntrega;
-
-
-    
 }
