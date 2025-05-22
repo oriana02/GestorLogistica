@@ -27,7 +27,6 @@ public class PedidoService {
     // se cambia pedido a pedidodto
     private PedidoDto convertirDto(PedidoEntity entity){
         PedidoDto dto = new PedidoDto();
-        dto.setIdPedido(entity.getIdPedido());
         dto.setComunaPedido(entity.getComunaPedido());
         dto.setEstadoPedido(entity.getEstadoPedido());
         dto.setFechaEntrega(entity.getFechaEntrega());

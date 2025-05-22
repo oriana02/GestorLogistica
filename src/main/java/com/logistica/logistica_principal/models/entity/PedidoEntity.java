@@ -1,6 +1,7 @@
 package com.logistica.logistica_principal.models.entity;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,10 +27,10 @@ public class PedidoEntity {
     private String comunaPedido;
     
     @Column(name = "fechaCompra")
-    private Date fechaCompra;
+    private LocalDate fechaCompra;
 
     @Column(name = "fechaEntrega")
-    private Date fechaEntrega;
+    private LocalDate fechaEntrega;
 
     @Column(name = "estadoPedido")
     private String estadoPedido;

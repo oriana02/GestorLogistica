@@ -50,7 +50,6 @@ public class PedidoController {
     @Operation(summary = "Este endpoint permite agregar pedido")
     @PostMapping("/pedidosNuevo")
     public ResponseEntity<PedidoEntity> agregarPedido(@RequestBody PedidoEntity nuevoPedido){
-        nuevoPedido.setIdPedido(0);
         PedidoEntity pedidoGuardado = pedidoService.agregarPedido(nuevoPedido);
         return ResponseEntity.ok(pedidoGuardado);
     }

@@ -1,6 +1,8 @@
 package com.logistica.logistica_principal.models;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,8 @@ public class Pedido {
 
     private int idPedido;
     private String comunaPedido;
-    private Date fechaCompra;
-    private Date fechaEntrega;
+    private LocalDate fechaCompra;
+    private LocalDate fechaEntrega;
     private String estadoPedido; // entregado, en camino, pendiente
 
 }
