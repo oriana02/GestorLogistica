@@ -1,9 +1,9 @@
 package com.logistica.logistica_principal.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +39,8 @@ public class PedidoController {
 
     @Operation(summary = "Busca un pedido por su id")
     @GetMapping("/pedidos/{idPedido}")
-    public ResponseEntity<Optional<PedidoEntity>> obtenerPedidoPorId(@PathVariable Integer idPedido){
-        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);       
+    public ResponseEntity<PedidoEntity> obtenerPedidoPorId(@PathVariable Integer idPedido){
+        PedidoEntity pedido = pedidoService.buscarPorId(idPedido);       
         if (pedido != null) {
             return ResponseEntity.ok(pedido);            
         }
@@ -49,43 +49,32 @@ public class PedidoController {
 
     @Operation(summary = "Este endpoint permite agregar pedido")
     @PostMapping("/pedidosNuevo")
-    public ResponseEntity<PedidoEntity> agregarPedido(@RequestBody PedidoEntity nuevoPedido){
-        PedidoEntity pedidoGuardado = pedidoService.agregarPedido(nuevoPedido);
-        return ResponseEntity.ok(pedidoGuardado);
+    public ResponseEntity<String> agregarPedido(@RequestBody PedidoEntity nuevoPedido){
+        String respuesta = pedidoService.agregarPedido(nuevoPedido);
+        return ResponseEntity.ok(respuesta);
     }
 
     @Operation(summary = "Permite actualizar el pedido")
     @PutMapping("/pedidosActualizar")
-    public ResponseEntity<Optional<PedidoEntity>> actualizarPedido(@RequestBody PedidoEntity pedido) {
-        Optional<PedidoEntity> pedidoExiste = pedidoService.actualizaPedido(pedido);
-        if (pedidoExiste.isPresent()) {
-            return ResponseEntity.ok(pedidoExiste);
+    public ResponseEntity<String> actualizarPedido(@RequestBody PedidoEntity pedido) {
+        String respuesta = pedidoService.actualizaPedido(pedido);
+        if (respuesta.equals("Pedido actualizado")) {
+            return ResponseEntity.ok(respuesta);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
         }
     }
 
     @Operation(summary = "Elimina un pedido por id")
     @DeleteMapping("/pedidosEliminado/{idPedido}")
-    public ResponseEntity<Optional<PedidoEntity>> eliminarPedido(@PathVariable Integer idPedido){
-        Optional<PedidoEntity> pedido = pedidoService.buscarPorId(idPedido);
-        if (pedido.isPresent()) {
+    public ResponseEntity<String> eliminarPedido(@PathVariable Integer idPedido){
+            String respuesta = pedidoService.eliminarPedido(idPedido);
+        if (respuesta.equals("Pedido eliminado correctamente")) {
             pedidoService.eliminarPedido(idPedido);
-            return ResponseEntity.ok(pedido);
+            return ResponseEntity.ok(respuesta);
         } else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
         }
-    }
-
-    @Operation(summary = "Busca pedido por comuna")
-    @GetMapping("/pedidosdtoComuna/{comunaPedido}")
-    public ResponseEntity<List<PedidoDto>> buscarPorComuna(@PathVariable String comunaPedido){
-        List<PedidoDto> pedidoDto = pedidoService.buscarPorComuna(comunaPedido);
-        if (pedidoDto != null) {
-            return ResponseEntity.ok(pedidoDto);
-            
-        }
-        return ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "Busca pedido por estado de pedido")
