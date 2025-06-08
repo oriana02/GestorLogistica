@@ -78,7 +78,7 @@ public class PedidoService {
                 pedido.setFechaEntrega(pedidoActualizado.getFechaEntrega());
                 pedido.setEstadoPedido(pedidoActualizado.getEstadoPedido());
                 pedidorepository.save(pedido);
-                return "Pedido actualizado";
+                return "Pedido actualizado correctamente";
             }else{
                 return "Pedido no encontrado";
             }

@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.logistica.logistica_principal.models.Pedido;
 import com.logistica.logistica_principal.models.dto.PedidoDto;
 import com.logistica.logistica_principal.models.entity.PedidoEntity;
 import com.logistica.logistica_principal.service.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
-
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -29,15 +27,14 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-    
-    @Operation(summary = "Entrega una lista de los pedidos")
+    @Operation(summary = "Lista de Pedidos")
 
     @GetMapping("/pedidos")
-    public List<PedidoEntity> listarPedidos(){
-        return pedidoService.listarPedidos();
+    public ResponseEntity<List<PedidoEntity>> listarPedidos(){
+        return ResponseEntity.ok(pedidoService.listarPedidos());
     }
 
-    @Operation(summary = "Busca un pedido por su id")
+    @Operation(summary = "Busca Pedido por su ID")
     @GetMapping("/pedidos/{idPedido}")
     public ResponseEntity<PedidoEntity> obtenerPedidoPorId(@PathVariable Integer idPedido){
         PedidoEntity pedido = pedidoService.buscarPorId(idPedido);       
@@ -47,37 +44,37 @@ public class PedidoController {
         return ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Este endpoint permite agregar pedido")
+    @Operation(summary = "Agregar Pedido")
     @PostMapping("/pedidosNuevo")
     public ResponseEntity<String> agregarPedido(@RequestBody PedidoEntity nuevoPedido){
         String respuesta = pedidoService.agregarPedido(nuevoPedido);
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
-    @Operation(summary = "Permite actualizar el pedido")
+    @Operation(summary = "Actualizar Pedido")
     @PutMapping("/pedidosActualizar")
     public ResponseEntity<String> actualizarPedido(@RequestBody PedidoEntity pedido) {
         String respuesta = pedidoService.actualizaPedido(pedido);
-        if (respuesta.equals("Pedido actualizado")) {
+        if (respuesta.equalsIgnoreCase("Pedido actualizado correctamente")) {
             return ResponseEntity.ok(respuesta);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("pedido no encontrado para actualizar"+ pedido);
         }
     }
 
-    @Operation(summary = "Elimina un pedido por id")
-    @DeleteMapping("/pedidosEliminado/{idPedido}")
+    @Operation(summary = "Eliminar Pedido por ID")
+    @DeleteMapping("/pedidosEliminar/{idPedido}")
     public ResponseEntity<String> eliminarPedido(@PathVariable Integer idPedido){
             String respuesta = pedidoService.eliminarPedido(idPedido);
-        if (respuesta.equals("Pedido eliminado correctamente")) {
+        if (respuesta.equalsIgnoreCase("Pedido eliminado correctamente")) {
             pedidoService.eliminarPedido(idPedido);
-            return ResponseEntity.ok(respuesta);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido no encontrado "+ idPedido);
         }
     }
 
-    @Operation(summary = "Busca pedido por estado de pedido")
+    @Operation(summary = "Busca Pedido por Estado")
     @GetMapping("/pedidodtoEstado/{estadoPedido}")
     public ResponseEntity<List<PedidoDto>> buscarPorEstado(@PathVariable String estadoPedido){
         List<PedidoDto> pedidoDto = pedidoService.buscarPorEstado(estadoPedido);
@@ -86,7 +83,5 @@ public class PedidoController {
         }
         return ResponseEntity.notFound().build();
     }
-
-
 
 }
