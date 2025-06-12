@@ -45,6 +45,7 @@ public class PedidoService {
 
     public  String agregarPedido(PedidoEntity pedido){
         try {
+            boolean existe = pedidorepository.existsByIdPedido(pedido.getIdPedido());  
             PedidoEntity pedidonuevo = new PedidoEntity();
             pedidonuevo.setComunaPedido(pedido.getComunaPedido());
             pedidonuevo.setFechaCompra(pedido.getFechaCompra());
@@ -59,11 +60,18 @@ public class PedidoService {
 
     //elimina pedido por id
     public String eliminarPedido(Integer idPedido){
-        if (pedidorepository.existsById(idPedido)) {
+        try {
+            
+            if (pedidorepository.existsByIdPedido(idPedido)) {
             pedidorepository.deleteById(idPedido);
             return "Pedido eliminado correctamente";
+            }
+            return "Pedido no encontrado";
+        } catch (Exception e) {
+            return e.getMessage();
         }
-        return "Pedido no encontrado";
+        
+        
     }
 
     //actualiza un pedido existente
