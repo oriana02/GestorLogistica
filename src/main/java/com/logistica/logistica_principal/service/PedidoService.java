@@ -20,7 +20,7 @@ public class PedidoService {
     }
 
     public PedidoEntity buscarPorId(Integer idPedido){
-        if (pedidorepository.existsById(idPedido)) {
+        if (pedidorepository.existsByIdPedido(idPedido)) {
             return pedidorepository.findPedidoByIdPedido(idPedido);
         } 
         return null; 
@@ -46,13 +46,16 @@ public class PedidoService {
     public  String agregarPedido(PedidoEntity pedido){
         try {
             boolean existe = pedidorepository.existsByIdPedido(pedido.getIdPedido());  
-            PedidoEntity pedidonuevo = new PedidoEntity();
-            pedidonuevo.setComunaPedido(pedido.getComunaPedido());
-            pedidonuevo.setFechaCompra(pedido.getFechaCompra());
-            pedidonuevo.setFechaEntrega(pedido.getFechaEntrega());
-            pedidonuevo.setEstadoPedido(pedido.getEstadoPedido());
-            pedidorepository.save(pedidonuevo);
-            return "Pedido agregado correctamente";
+            if (!existe) {
+                PedidoEntity pedidonuevo = new PedidoEntity(); 
+                pedidonuevo.setComunaPedido(pedido.getComunaPedido());
+                pedidonuevo.setFechaCompra(pedido.getFechaCompra());
+                pedidonuevo.setFechaEntrega(pedido.getFechaEntrega());
+                pedidonuevo.setEstadoPedido(pedido.getEstadoPedido());
+                pedidorepository.save(pedidonuevo);
+                return "Pedido agregado correctamente";  
+            }
+            return "El Pedido ya existe";
         } catch (Exception e) {
             return "Error al agregar el pedido: "+ e.getMessage();
         }
@@ -79,7 +82,7 @@ public class PedidoService {
         try {
             Integer idPedido = pedidoActualizado.getIdPedido();
             
-            if (pedidorepository.existsById(idPedido)) {
+            if (pedidorepository.existsByIdPedido(idPedido)) {
                 PedidoEntity pedido = pedidorepository.findPedidoByIdPedido(idPedido);
                 pedido.setComunaPedido(pedidoActualizado.getComunaPedido());
                 pedido.setFechaCompra(pedidoActualizado.getFechaCompra());
