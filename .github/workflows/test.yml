@@ -21,4 +21,4 @@ jobs:
 
     - name: test al proyecto
       run: |
-        ./mvnw test  
+        ./mvnw test
