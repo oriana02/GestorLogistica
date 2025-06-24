@@ -28,7 +28,7 @@ jobs:
                 path: "./"  # Directorio de origen (los archivos del repositorio)
                 remote_host: ${{ secrets.IP_SERVER }}  # Dirección IP del servidor
                 remote_user: ${{ secrets.USERNAME }}  # Usuario SSH en el servidor
-                remote_path: "/home/ubuntu/fs1001/"  # Ruta de destino en el servidor
+                remote_path: "/home/ubuntu/app/"  # Ruta de destino en el servidor
                 remote_key: ${{ secrets.PRIVATE_KEY }}  # Clave SSH para autenticar
                 remote_port: ${{ secrets.PORT }}  # Puerto SSH (si es distinto del predeterminado 22)
 
