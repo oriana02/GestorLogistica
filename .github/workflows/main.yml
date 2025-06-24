@@ -19,7 +19,7 @@ jobs:
                     key: ${{ secrets.PRIVATE_KEY }}
                     port: ${{ secrets.PORT }}
                     script: |
-                            mkdir -p /home/ubuntu/fs1001
+                            mkdir -p /home/ubuntu/web-nueva
 
             - name: Sincronizar archivos con el servidor
               uses: burnett01/rsync-deployments@7.0.2
@@ -41,6 +41,6 @@ jobs:
                 key: ${{ secrets.PRIVATE_KEY }}
                 port: ${{ secrets.PORT }}
                 script: |
-                        cd /home/ubuntu/fs1001/
+                        cd /home/ubuntu/app/
                         sudo docker compose down
                         sudo docker compose up -d --build
