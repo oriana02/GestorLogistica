@@ -72,6 +72,21 @@ public class PedidoTest {
     }
 
     @Test
+    public void testActualizarPedido_noExiste(){
+        PedidoEntity pedidoActualizado = new PedidoEntity();
+        pedidoActualizado.setIdPedido(293);
+        pedidoActualizado.setComunaPedido("Limache");
+        pedidoActualizado.setFechaCompra(LocalDate.of(2025, 6, 1));
+        pedidoActualizado.setFechaEntrega(LocalDate.of(2025, 6, 4));
+        pedidoActualizado.setEstadoPedido("Pendiente");
+
+        when(pedidoRepository.existsByIdPedido(293)).thenReturn(false);
+        String result = pedidoservice.actualizaPedido(pedidoActualizado);
+        assertEquals("Pedido no existe", result);
+
+    }
+
+    @Test
     public void testBuscarPorId_existe(){
         when(pedidoRepository.existsByIdPedido(1)).thenReturn(true);
         when(pedidoRepository.findPedidoByIdPedido(1)).thenReturn(pedidoEntity);
@@ -84,7 +99,6 @@ public class PedidoTest {
     @Test
     public void testBuscarPorId_noExiste(){
         when(pedidoRepository.existsByIdPedido(55)).thenReturn(false);
-        when(pedidoRepository.findPedidoByIdPedido(55)).thenReturn(pedidoEntity);
         PedidoEntity result = pedidoservice.buscarPorId(55);
         assertNull(result);
 
@@ -112,6 +126,13 @@ public class PedidoTest {
         String result = pedidoservice.eliminarPedido(1);
 
         assertEquals("Pedido eliminado correctamente", result);
+    }
+
+    @Test
+    public void borrarPedido_noExiste(){
+        when(pedidoRepository.existsByIdPedido(99)).thenReturn(false);
+        String result = pedidoservice.eliminarPedido(99);
+        assertEquals("Pedido no existe", result);
     }
 
 

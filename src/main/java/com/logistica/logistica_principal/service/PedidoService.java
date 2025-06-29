@@ -69,7 +69,7 @@ public class PedidoService {
             pedidorepository.deleteById(idPedido);
             return "Pedido eliminado correctamente";
             }
-            return "Pedido no encontrado";
+            return "Pedido no existe";
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -91,7 +91,7 @@ public class PedidoService {
                 pedidorepository.save(pedido);
                 return "Pedido actualizado correctamente";
             }else{
-                return "Pedido no encontrado";
+                return "Pedido no existe";
             }
             
         } catch (Exception e) {
