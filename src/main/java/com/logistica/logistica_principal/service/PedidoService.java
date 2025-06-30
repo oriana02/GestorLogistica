@@ -19,11 +19,19 @@ public class PedidoService {
         return pedidorepository.findAll();
     }
 
-    public PedidoEntity buscarPorId(Integer idPedido){
-        if (pedidorepository.existsByIdPedido(idPedido)) {
-            return pedidorepository.findPedidoByIdPedido(idPedido);
-        } 
-        return null; 
+    public String buscarPorId(Integer idPedido){
+        try {
+            if (pedidorepository.existsByIdPedido(idPedido)) {
+                PedidoEntity pedido = pedidorepository.findPedidoByIdPedido(idPedido);
+                return "Pedido encontrado: "+ pedido.getIdPedido();
+                
+            } 
+            return "Pedido no existe";
+            
+        } catch (Exception e) {
+            return "Error al buscar el Pedido: "+ e.getMessage();
+        }
+
     }
 
     public List<PedidoDto> buscarPorEstado(String estado){

@@ -36,12 +36,12 @@ public class PedidoController {
 
     @Operation(summary = "Busca Pedido por su ID")
     @GetMapping("/pedidos/{idPedido}")
-    public ResponseEntity<PedidoEntity> obtenerPedidoPorId(@PathVariable Integer idPedido){
-        PedidoEntity pedido = pedidoService.buscarPorId(idPedido);       
-        if (pedido != null) {
-            return ResponseEntity.ok(pedido);            
+    public ResponseEntity<String> obtenerPedidoPorId(@PathVariable Integer idPedido){
+        String respuesta = pedidoService.buscarPorId(idPedido);       
+        if (respuesta == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido no existe");            
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(respuesta);
     }
 
     @Operation(summary = "Agregar Pedido")
@@ -58,7 +58,7 @@ public class PedidoController {
         if (respuesta.equalsIgnoreCase("Pedido actualizado correctamente")) {
             return ResponseEntity.ok(respuesta);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("pedido no encontrado para actualizar"+ pedido);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("pedido no existe");
         }
     }
 

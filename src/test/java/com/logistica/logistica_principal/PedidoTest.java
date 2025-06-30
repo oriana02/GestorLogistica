@@ -2,7 +2,6 @@ package com.logistica.logistica_principal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -90,17 +89,18 @@ public class PedidoTest {
     public void testBuscarPorId_existe(){
         when(pedidoRepository.existsByIdPedido(1)).thenReturn(true);
         when(pedidoRepository.findPedidoByIdPedido(1)).thenReturn(pedidoEntity);
-        PedidoEntity result = pedidoservice.buscarPorId(1);
+        
+        String result = pedidoservice.buscarPorId(1);
         assertNotNull(result);
-        assertEquals(1, result.getIdPedido());
-
+        assertEquals("Pedido encontrado: 1", result);
     }
 
     @Test
     public void testBuscarPorId_noExiste(){
         when(pedidoRepository.existsByIdPedido(55)).thenReturn(false);
-        PedidoEntity result = pedidoservice.buscarPorId(55);
-        assertNull(result);
+        
+        String result = pedidoservice.buscarPorId(55);
+        assertEquals("Pedido no existe", result);
 
     }
 
